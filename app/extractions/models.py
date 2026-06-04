@@ -3,6 +3,7 @@ from datetime import datetime, UTC
 from sqlalchemy import Column, String, DateTime, JSON
 from app.database import Base
 
+
 class ExtractionTask(Base):
     __tablename__ = "extraction_tasks"
 
@@ -11,4 +12,5 @@ class ExtractionTask(Base):
     target_schema = Column(JSON, nullable=False)
     status = Column(String, default="PENDING", nullable=False)
     result = Column(JSON, nullable=True)
-    created_at = Column(DateTime, default=lambda: datetime.now(UTC))
+
+    created_at = Column(DateTime, default=lambda: datetime.now(UTC).replace(tzinfo=None))
