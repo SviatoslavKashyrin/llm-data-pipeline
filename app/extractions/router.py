@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_async_session
 from app.extractions.schemas import ExtractionRequest, ExtractionResponse
 from app.extractions.models import ExtractionTask
+from app.extractions.tasks import process_extraction_task
 
 
 router = APIRouter(prefix="/api/v1/extractions", tags=["Extractions"])
@@ -22,9 +23,10 @@ async def create_extraction_task(
 
     session.add(new_task)
     await session.commit()
-
-
     await session.refresh(new_task)
+
+
+    process_extraction_task.delay(new_task.id)
 
 
     return ExtractionResponse(
